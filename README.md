@@ -80,7 +80,7 @@ python -m venv venv
 source venv/bin/activate
 
 # Instale as dependências
-pip install fastapi uvicorn sqlalchemy pandas python-multipart
+pip install -r requirements.txt
 ```
 
 ### 3. Configuração do Frontend
@@ -126,6 +126,7 @@ O frontend estará rodando em: `http://localhost:5173` (ou outra porta disponív
 
 ## 📡 Endpoints da API
 
+### Status
 ### `GET /`
 Retorna uma mensagem de status da API.
 
@@ -136,6 +137,7 @@ Retorna uma mensagem de status da API.
 }
 ```
 
+### Upload de CSV
 ### `POST /upload/categories`
 Importa categorias a partir de um arquivo CSV.
 
@@ -189,6 +191,131 @@ id,product_id,quantity,total_price,date
   "message": "20 vendas importadas."
 }
 ```
+
+### Visualização de Dados
+### `GET /categories`
+Lista todas as categorias.
+
+### `GET /categories/{id}`
+Obtém uma categoria específica.
+
+### `GET /products`
+Lista todos os produtos com filtros opcionais.
+
+**Query Parameters:**
+- `category_id` (opcional): Filtrar por categoria
+- `search` (opcional): Buscar por nome
+- `min_price` (opcional): Preço mínimo
+- `max_price` (opcional): Preço máximo
+
+### `GET /products/{id}`
+Obtém um produto específico.
+
+### `GET /sales`
+Lista todas as vendas.
+
+**Query Parameters:**
+- `product_id` (opcional): Filtrar por produto
+
+### `GET /sales/{id}`
+Obtém uma venda específica.
+
+### Cadastro Manual
+### `POST /categories`
+Cria uma nova categoria.
+
+**Body:**
+```json
+{
+  "name": "Eletrônicos"
+}
+```
+
+### `POST /products`
+Cria um novo produto.
+
+**Body:**
+```json
+{
+  "name": "Notebook",
+  "price": 2500.00,
+  "category_id": 1
+}
+```
+
+### Edição
+### `PUT /categories/{id}`
+Atualiza uma categoria.
+
+### `PUT /products/{id}`
+Atualiza um produto.
+
+**Body (todos os campos opcionais):**
+```json
+{
+  "name": "Notebook Atualizado",
+  "price": 2300.00,
+  "category_id": 1
+}
+```
+
+### Exclusão
+### `DELETE /categories/{id}`
+Deleta uma categoria (apenas se não houver produtos associados).
+
+### `DELETE /products/{id}`
+Deleta um produto.
+
+### Análise e Estatísticas
+### `GET /analytics/sales`
+Retorna estatísticas gerais de vendas.
+
+**Resposta:**
+```json
+{
+  "total_sales": 150,
+  "total_revenue": 125000.50,
+  "total_quantity": 300,
+  "average_sale_value": 833.34
+}
+```
+
+### `GET /analytics/products`
+Retorna os 10 produtos mais vendidos.
+
+### `GET /analytics/categories`
+Retorna vendas agrupadas por categoria.
+
+### `GET /analytics/monthly`
+Retorna vendas agrupadas por mês.
+
+## 🎨 Funcionalidades do Frontend
+
+O frontend oferece uma interface completa com três seções principais:
+
+### Dashboard
+- **Métricas Gerais**: Total de vendas, receita total, quantidade total e ticket médio
+- **Top 10 Produtos Mais Vendidos**: Ranking dos produtos com maior volume de vendas
+- **Vendas por Categoria**: Análise de vendas agrupadas por categoria
+- **Vendas por Mês**: Histórico mensal de vendas
+
+### Produtos
+- **Listagem Completa**: Tabela com todos os produtos cadastrados
+- **Filtros Avançados**:
+  - Busca por nome
+  - Filtro por categoria
+  - Filtro por faixa de preço (mínimo e máximo)
+- **Cadastro Manual**: Formulário para criar novos produtos
+- **Edição**: Atualização de produtos existentes
+- **Exclusão**: Remoção de produtos com confirmação
+
+### Importação CSV
+- Upload de arquivos CSV para:
+  - Categorias
+  - Produtos
+  - Vendas
+- Suporte a formatos flexíveis (date ou month para vendas)
+- Feedback visual de sucesso/erro
 
 ## 🗄️ Estrutura do Banco de Dados
 
